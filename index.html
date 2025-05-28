@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderWise - Your Personal Travel Planner</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #f8a23c;
+            --accent-color: #34d399;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --text-dark: #374151;
+            --text-light: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color) !important;
+            transform: translateY(-2px);
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: var(--secondary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(44, 90, 160, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(44, 90, 160, 0.8), rgba(248, 162, 60, 0.8)),
+                        url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: var(--light-color);
+        }
+
+        .feature-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 300px;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(44, 90, 160, 0.9), rgba(248, 162, 60, 0.9));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+
+        .portfolio-content {
+            text-align: center;
+            color: white;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:hover .portfolio-content {
+            transform: translateY(0);
+        }
+
+         
+         /* Section Title */
+         .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 6rem 0;
+            background: var(--light-color);
+            position: relative;
+        }
+
+        .testimonial-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .testimonial-slide {
+            min-width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 1rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            margin: 2rem 0;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 6rem;
+            color: var(--secondary-color);
+            font-family: serif;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+
+        .author-info h5 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        .author-info p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-btn.prev {
+            left: 20px;
+        }
+
+        .nav-btn.next {
+            right: 20px;
+        }
+
+        /* Indicators */
+        .slider-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(44, 90, 160, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .indicator.active {
+            background: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        .indicator:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Auto-play progress bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent-color);
+            transition: width 0.1s linear;
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .testimonials {
+                padding: 4rem 0;
+            }
+
+            .testimonial-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem 0;
+            }
+
+            .testimonial-card::before {
+                font-size: 4rem;
+                top: -15px;
+            }
+
+            .testimonial-text {
+                font-size: 1rem;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .nav-btn.prev {
+                left: 10px;
+            }
+
+            .nav-btn.next {
+                right: 10px;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .testimonial-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .testimonial-author {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .author-avatar {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Contact Section */
+        .contact {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .contact-form {
+            background: var(--light-color);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control {
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 5px 30px rgba(44, 90, 160, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer h5 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--secondary-color);
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card {
+                margin-bottom: 2rem;
+            }
+            
+            .navbar-nav {
+                text-align: center;
+                padding-top: 1rem;
+            }
+            
+            .contact-form {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fas fa-compass me-2"></i>WanderWise
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#portfolio">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Reviews</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                </ul>
+                <a href="#contact" class="btn btn-primary ms-3">Start Planning</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+            <h1>Craft Your Perfect Journey</h1>
+            <p>Professional travel planning services that transform your dreams into unforgettable experiences. Let us handle the details while you focus on making memories.</p>
+            <div class="hero-buttons">
+                <a href="#services" class="btn btn-primary">Explore Services</a>
+                <a href="#portfolio" class="btn btn-secondary">View Our Work</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features/Services Section -->
+    <section id="services" class="features">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Our Expert Services</h2>
+                <p>From initial consultation to post-trip support, we provide comprehensive travel planning services tailored to your unique needs and preferences.</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Custom Itinerary Design</h3>
+                        <p>Bespoke travel itineraries crafted specifically for your interests, budget, and timeline. Every detail is personalized to create your perfect journey experience.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <h3>Luxury Accommodations</h3>
+                        <p>Access to exclusive hotels, boutique properties, and unique stays worldwide. We secure the best rates and special amenities for unforgettable comfort.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>24/7 Travel Support</h3>
+                        <p>Round-the-clock assistance throughout your journey. From flight changes to emergency support, we're always here to ensure smooth travels.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Group Travel Coordination</h3>
+                        <p>Seamless planning for family reunions, corporate retreats, and group adventures. We handle logistics so you can focus on creating memories together.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe-americas"></i>
+                        </div>
+                        <h3>Destination Expertise</h3>
+                        <p>In-depth knowledge of global destinations with personal connections and insider access to exclusive experiences you won't find elsewhere.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Travel Insurance & Safety</h3>
+                        <p>Comprehensive travel protection and safety guidance. We ensure you're covered and informed about health, safety, and travel requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Travel Experiences</h2>
+                <p>Discover some of our most memorable travel experiences and the extraordinary journeys we've crafted for our clients around the world.</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="European Romance">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-content">
+                                <h4>European Romance</h4>
+                                <p>14-day luxury tour through Paris, Rome, and Santorini</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="portfolio-item">
+                        <img src="assets/2.jpg" alt="Asian Adventure">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-content">
+                                <h4>Asian Adventure</h4>
+                                <p>Cultural immersion across Japan, Thailand, and Bali</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="African Safari">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-content">
+                                <h4>African Safari</h4>
+                                <p>Wildlife expedition through Kenya and Tanzania</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="South American Explorer">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-content">
+                                <h4>South American Explorer</h4>
+                                <p>Adventure through Peru, Chile, and Argentina</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="portfolio-item">
+                        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nordic Escape">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-content">
+                                <h4>Nordic Escape</h4>
+                                <p>Northern lights and fjords in Norway and Iceland</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="portfolio-item">
+                        <img src="assets/1.jpg">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-content">
+                                <h4>Caribbean Paradise</h4>
+                                <p>Island hopping luxury experience in the Caribbean</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>Client Stories</h2>
+                <p>Hear from our satisfied clients about their extraordinary travel experiences and how we helped turn their
+                    dream vacations into reality.</p>
+            </div>
+    
+            <div class="testimonial-slider">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <!-- Slide 1 -->
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">WanderWise planned our honeymoon to Italy and it was absolutely
+                                magical. Every detail was perfect, from the romantic dinners to the breathtaking
+                                accommodations. The personalized itinerary and local recommendations made our trip
+                                unforgettable. They truly made our dreams come true!</p>
+                            <div class="testimonial-author">
+                                <img src="assets/6.jpg"
+                                    alt="Fatima Al-Zahra" class="author-avatar">
+                                <div class="author-info">
+                                    <h5>Fatima Al-Zahra</h5>
+                                    <p>Newlywed Traveler</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Slide 2 -->
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">As a busy executive, I needed someone I could trust to handle every
+                                aspect of my family vacation. WanderWise exceeded all expectations and gave us memories that
+                                will last a lifetime. Their attention to detail and 24/7 support made the entire experience
+                                stress-free and enjoyable.</p>
+                            <div class="testimonial-author">
+                                <img src="assets/4.jpg"
+                                    alt="Omar Al-Rashid" class="author-avatar">
+                                <div class="author-info">
+                                    <h5>Omar Al-Rashid</h5>
+                                    <p>Business Executive</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Slide 3 -->
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">The African safari they organized was the adventure of a lifetime.
+                                Their local connections and expertise made all the difference. From luxury tented camps to
+                                incredible wildlife encounters, every moment was perfectly orchestrated. I wouldn't trust
+                                anyone else with my travel plans!</p>
+                            <div class="testimonial-author">
+                                <img src="assets/7.jpg"
+                                    alt="Aisha Bin Khalid" class="author-avatar">
+                                <div class="author-info">
+                                    <h5>Aisha Bin Khalid</h5>
+                                    <p>Adventure Enthusiast</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Slide 4 -->
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">Our multi-generational family trip to Japan was flawlessly executed.
+                                WanderWise understood our diverse needs and created an itinerary that delighted everyone
+                                from grandparents to grandchildren. The cultural experiences and seamless logistics made
+                                this our best family vacation ever.</p>
+                            <div class="testimonial-author">
+                                <img src="assets/3.jpg"
+                                    alt="Ahmed Al-Mansouri" class="author-avatar">
+                                <div class="author-info">
+                                    <h5>Ahmed Al-Mansouri</h5>
+                                    <p>Family Traveler</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Slide 5 -->
+                    <div class="testimonial-slide">
+                        <div class="testimonial-card">
+                            <p class="testimonial-text">As a solo female traveler, I was initially nervous about exploring
+                                Southeast Asia. WanderWise provided exceptional support and carefully curated experiences
+                                that made me feel safe and confident throughout my journey. Their local guides and
+                                recommendations were invaluable.</p>
+                            <div class="testimonial-author">
+                                <img src="assets/7.jpg"
+                                    alt="Zeinab Al-Kasimi" class="author-avatar">
+                                <div class="author-info">
+                                    <h5>Zeinab Al-Kasimi</h5>
+                                    <p>Solo Traveler</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Navigation Buttons -->
+                <button class="nav-btn prev" id="prevBtn" aria-label="Previous testimonial">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn next" id="nextBtn" aria-label="Next testimonial">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+    
+                <!-- Progress Bar -->
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+    
+            <!-- Indicators -->
+            <div class="slider-indicators" id="indicators">
+                <button class="indicator active" data-slide="0"></button>
+                <button class="indicator" data-slide="1"></button>
+                <button class="indicator" data-slide="2"></button>
+                <button class="indicator" data-slide="3"></button>
+                <button class="indicator" data-slide="4"></button>
+            </div>
+        </div>
+        </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Start Your Journey</h2>
+                <p>Ready to plan your next adventure? Get in touch with our travel experts and let's create an unforgettable experience tailored just for you.</p>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-form" data-aos="fade-up" data-aos-delay="200">
+                        <form id="contactForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" placeholder="Your Name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="email" class="form-control" placeholder="Your Email" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <input type="tel" class="form-control" placeholder="Phone Number">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <select class="form-control">
+                                        <option>Trip Type</option>
+                                        <option>Honeymoon</option>
+                                        <option>Family Vacation</option>
+                                        <option>Business Travel</option>
+                                        <option>Adventure Travel</option>
+                                        <option>Luxury Travel</option>
+                                        <option>Group Travel</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="5" placeholder="Tell us about your dream destination and travel preferences..."></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Start Planning My Trip</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5><i class="fas fa-compass me-2"></i>WanderWise</h5>
+                    <p>Your trusted partner in creating extraordinary travel experiences. We turn your wanderlust into carefully crafted adventures that exceed expectations.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#testimonials">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Custom Itineraries</a></li>
+                        <li><a href="#">Luxury Travel</a></li>
+                        <li><a href="#">Group Travel</a></li>
+                        <li><a href="#">Business Travel</a></li>
+                        <li><a href="#">Adventure Tours</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope me-2"></i>hello@wanderwise.com</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Travel Street, Adventure City</li>
+                        <li><i class="fas fa-clock me-2"></i>Mon-Fri: 9AM-6PM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 WanderWise Travel Planning. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#" class="btn btn-primary btn-sm">Book Consultation</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <script>
+        // Wait for DOM to be fully loaded
+            document.addEventListener('DOMContentLoaded', function () {
+
+                // Initialize AOS (Animate On Scroll) - only if AOS is loaded
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 800,
+                        once: true,
+                        offset: 100
+                    });
+                }
+
+                // Navbar scroll effect
+                window.addEventListener('scroll', function () {
+                    const navbar = document.querySelector('.navbar');
+                    if (navbar) {
+                        if (window.scrollY > 50) {
+                            navbar.classList.add('scrolled');
+                        } else {
+                            navbar.classList.remove('scrolled');
+                        }
+                    }
+                });
+
+                // Smooth scrolling for navigation links
+                document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+                    link.addEventListener('click', function (event) {
+                        const targetId = this.getAttribute('href');
+                        const target = document.querySelector(targetId);
+
+                        if (target) {
+                            event.preventDefault();
+                            const offsetTop = target.offsetTop - 70;
+
+                            window.scrollTo({
+                                top: offsetTop,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                });
+
+                // Form submission
+                const contactForm = document.getElementById('contactForm');
+                if (contactForm) {
+                    contactForm.addEventListener('submit', function (e) {
+                        e.preventDefault();
+
+                        // Simple form validation
+                        const nameInput = this.querySelector('input[name="name"], input[type="text"]');
+                        const emailInput = this.querySelector('input[type="email"]');
+
+                        const name = nameInput ? nameInput.value.trim() : '';
+                        const email = emailInput ? emailInput.value.trim() : '';
+
+                        if (name && email) {
+                            // Simulate form submission
+                            alert('Thank you for your interest! We\'ll contact you within 24 hours to discuss your travel plans.');
+                            this.reset();
+                        } else {
+                            alert('Please fill in all required fields.');
+                        }
+                    });
+                }
+
+                // Parallax effect for hero section
+                window.addEventListener('scroll', function () {
+                    const hero = document.querySelector('.hero');
+                    if (hero) {
+                        const scrolled = window.scrollY;
+                        const speed = scrolled * 0.5;
+                        hero.style.backgroundPosition = `center ${speed}px`;
+                    }
+                });
+
+                // Counter animation for stats
+                function animateCounter(element, target) {
+                    let current = 0;
+                    const increment = target / 100;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        element.textContent = Math.floor(current);
+                        if (current >= target) {
+                            element.textContent = target;
+                            clearInterval(timer);
+                        }
+                    }, 20);
+                }
+
+                // Intersection Observer for fade-in animations
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, observerOptions);
+
+                // Observe all fade-in elements
+                document.querySelectorAll('.fade-in').forEach(el => {
+                    observer.observe(el);
+                });
+
+                // Portfolio item hover effects
+                document.querySelectorAll('.portfolio-item').forEach(function (item) {
+                    const img = item.querySelector('img');
+                    if (img) {
+                        item.addEventListener('mouseenter', function () {
+                            img.style.transform = 'scale(1.1)';
+                            img.style.transition = 'transform 0.3s ease';
+                        });
+
+                        item.addEventListener('mouseleave', function () {
+                            img.style.transform = 'scale(1)';
+                        });
+                    }
+                });
+
+                // Mobile menu close on link click
+                document.querySelectorAll('.navbar-nav .nav-link').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        if (window.innerWidth < 992) {
+                            const navbarCollapse = document.querySelector('.navbar-collapse');
+                            const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                            if (bsCollapse) {
+                                bsCollapse.hide();
+                            }
+                        }
+                    });
+                });
+
+                // Dynamic year in footer
+                const currentYearElement = document.getElementById('currentYear');
+                if (currentYearElement) {
+                    currentYearElement.textContent = new Date().getFullYear();
+                }
+
+                // Add floating animation to feature icons
+                document.querySelectorAll('.feature-icon').forEach(function (icon) {
+                    icon.addEventListener('mouseenter', function () {
+                        this.style.transform = 'translateY(-10px) rotateY(15deg)';
+                        this.style.transition = 'transform 0.3s ease';
+                    });
+
+                    icon.addEventListener('mouseleave', function () {
+                        this.style.transform = 'translateY(0) rotateY(0)';
+                    });
+                });
+
+                // Loading animation
+                document.body.classList.add('loaded');
+
+                // Preloader (optional)
+                const preloader = document.getElementById('preloader');
+                if (preloader) {
+                    setTimeout(() => {
+                        preloader.style.opacity = '0';
+                        preloader.style.transition = 'opacity 0.5s ease';
+                        setTimeout(() => {
+                            preloader.style.display = 'none';
+                        }, 500);
+                    }, 1000);
+                }
+
+                // Initialize testimonials slider if elements exist
+                const testimonialTrack = document.getElementById('testimonialTrack');
+                if (testimonialTrack) {
+                    new TestimonialsSlider();
+                }
+            });
+
+            // Testimonials Slider Class
+            class TestimonialsSlider {
+                constructor() {
+                    this.currentSlide = 0;
+                    this.totalSlides = 5;
+                    this.autoSlideInterval = 5000; // 5 seconds
+                    this.progressInterval = 50; // Update progress every 50ms
+                    this.isPlaying = true;
+                    this.progress = 0;
+
+                    // Get DOM elements
+                    this.track = document.getElementById('testimonialTrack');
+                    this.prevBtn = document.getElementById('prevBtn');
+                    this.nextBtn = document.getElementById('nextBtn');
+                    this.indicators = document.querySelectorAll('.indicator');
+                    this.progressBar = document.getElementById('progressBar');
+                    this.slider = document.querySelector('.testimonial-slider');
+
+                    // Check if required elements exist
+                    if (!this.track || !this.slider) {
+                        console.warn('Testimonials slider elements not found');
+                        return;
+                    }
+
+                    // Count actual slides if different from default
+                    const slides = this.track.querySelectorAll('.testimonial-slide, .slide');
+                    if (slides.length > 0) {
+                        this.totalSlides = slides.length;
+                    }
+
+                    this.init();
+                }
+
+                init() {
+                    this.bindEvents();
+                    this.startAutoSlide();
+                    this.updateProgressBar();
+
+                    // Initialize first slide
+                    this.updateSlider();
+                    this.updateIndicators();
+                }
+
+                bindEvents() {
+                    // Navigation buttons
+                    if (this.prevBtn) {
+                        this.prevBtn.addEventListener('click', () => {
+                            this.previousSlide();
+                            this.resetAutoSlide();
+                        });
+                    }
+
+                    if (this.nextBtn) {
+                        this.nextBtn.addEventListener('click', () => {
+                            this.nextSlide();
+                            this.resetAutoSlide();
+                        });
+                    }
+
+                    // Indicators
+                    this.indicators.forEach((indicator, index) => {
+                        indicator.addEventListener('click', () => {
+                            this.goToSlide(index);
+                            this.resetAutoSlide();
+                        });
+                    });
+
+                    // Pause on hover
+                    this.slider.addEventListener('mouseenter', () => {
+                        this.pauseAutoSlide();
+                    });
+
+                    this.slider.addEventListener('mouseleave', () => {
+                        this.resumeAutoSlide();
+                    });
+
+                    // Touch/swipe support
+                    let startX = 0;
+                    let endX = 0;
+
+                    this.slider.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].clientX;
+                        this.pauseAutoSlide();
+                    }, { passive: true });
+
+                    this.slider.addEventListener('touchend', (e) => {
+                        endX = e.changedTouches[0].clientX;
+                        this.handleSwipe(startX, endX);
+                        this.resumeAutoSlide();
+                    }, { passive: true });
+
+                    // Keyboard navigation
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'ArrowLeft') {
+                            this.previousSlide();
+                            this.resetAutoSlide();
+                        } else if (e.key === 'ArrowRight') {
+                            this.nextSlide();
+                            this.resetAutoSlide();
+                        }
+                    });
+                }
+
+                handleSwipe(startX, endX) {
+                    const threshold = 50;
+                    const diff = startX - endX;
+
+                    if (Math.abs(diff) > threshold) {
+                        if (diff > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.previousSlide();
+                        }
+                    }
+                }
+
+                goToSlide(slideIndex) {
+                    this.currentSlide = slideIndex;
+                    this.updateSlider();
+                    this.updateIndicators();
+                    this.resetProgress();
+                }
+
+                nextSlide() {
+                    this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                    this.updateSlider();
+                    this.updateIndicators();
+                    this.resetProgress();
+                }
+
+                previousSlide() {
+                    this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+                    this.updateSlider();
+                    this.updateIndicators();
+                    this.resetProgress();
+                }
+
+                updateSlider() {
+                    const translateX = -this.currentSlide * 100;
+                    this.track.style.transform = `translateX(${translateX}%)`;
+                    this.track.style.transition = 'transform 0.5s ease-in-out';
+                }
+
+                updateIndicators() {
+                    this.indicators.forEach((indicator, index) => {
+                        indicator.classList.toggle('active', index === this.currentSlide);
+                    });
+                }
+
+                startAutoSlide() {
+                    this.autoSlideTimer = setInterval(() => {
+                        if (this.isPlaying) {
+                            this.nextSlide();
+                        }
+                    }, this.autoSlideInterval);
+                }
+
+                pauseAutoSlide() {
+                    this.isPlaying = false;
+                }
+
+                resumeAutoSlide() {
+                    this.isPlaying = true;
+                }
+
+                resetAutoSlide() {
+                    if (this.autoSlideTimer) {
+                        clearInterval(this.autoSlideTimer);
+                    }
+                    if (this.progressTimer) {
+                        clearInterval(this.progressTimer);
+                    }
+                    this.resetProgress();
+                    this.startAutoSlide();
+                    this.updateProgressBar();
+                }
+
+                resetProgress() {
+                    this.progress = 0;
+                    if (this.progressBar) {
+                        this.progressBar.style.width = '0%';
+                    }
+                }
+
+                updateProgressBar() {
+                    if (!this.progressBar) return;
+
+                    this.progressTimer = setInterval(() => {
+                        if (this.isPlaying) {
+                            this.progress += (this.progressInterval / this.autoSlideInterval) * 100;
+                            this.progressBar.style.width = `${this.progress}%`;
+
+                            if (this.progress >= 100) {
+                                this.progress = 0;
+                            }
+                        }
+                    }, this.progressInterval);
+                }
+            }
+
+            // Utility function to expose counter animation globally if needed
+            window.animateCounter = function (element, target) {
+                let current = 0;
+                const increment = target / 100;
+                const timer = setInterval(() => {
+                    current += increment;
+                    element.textContent = Math.floor(current);
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, 20);
+            };
+    </script>
+
+</body>
+</html>
